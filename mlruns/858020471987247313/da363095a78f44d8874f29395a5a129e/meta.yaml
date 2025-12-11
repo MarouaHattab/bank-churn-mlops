@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/MSI/Desktop/bank-churn-mlops/mlruns/858020471987247313/da363095a78f44d8874f29395a5a129e/artifacts
+end_time: 1765411634195
+entry_point_name: ''
+experiment_id: '858020471987247313'
+lifecycle_stage: active
+run_id: da363095a78f44d8874f29395a5a129e
+run_name: random-forest-v1
+run_uuid: da363095a78f44d8874f29395a5a129e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765411629096
+status: 3
+tags: []
+user_id: MSI
