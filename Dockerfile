@@ -1,5 +1,5 @@
 # Utilise une image Python officielle
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Definir le repertoire de travail
 WORKDIR /app
@@ -10,9 +10,14 @@ COPY requirements.txt .
 # Installer les dependances
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier le code de l'application
+# Copier le code et les données
 COPY app/ ./app/
 COPY model/ ./model/
+COPY data/ ./data/
+COPY drift_data_gen.py .
+
+# Générer les données de production pour que le drift check fonctionne
+RUN python drift_data_gen.py
 
 # Exposer le port
 EXPOSE 8000
