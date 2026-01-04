@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import List
 import joblib
 import numpy as np
@@ -45,6 +47,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Servir les fichiers statiques (Frontend)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # -------------------------------------------------
 # Chargement du modèle
 # -------------------------------------------------
@@ -66,13 +71,8 @@ async def load_model():
 # -------------------------------------------------
 @app.get("/", tags=["General"])
 def root():
-    """Endpoint racine"""
-    return {
-        "message": "Bank Churn Prediction API",
-        "version": "1.0.0",
-        "status": "running",
-        "docs": "/docs"
-    }
+    """Redirige vers l'interface frontend"""
+    return FileResponse("static/index.html")
 
 @app.get("/health", response_model=HealthResponse)
 def health():
