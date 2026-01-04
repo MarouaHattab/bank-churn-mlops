@@ -1,8 +1,9 @@
 artifact_uri: file:///C:/Users/MSI/Desktop/bank-churn-mlops/mlruns/858020471987247313/71db44c8b56641af8dfc6efdd00e1a9d/artifacts
+deleted_time: 1767538363623
 end_time: 1765411594502
 entry_point_name: ''
 experiment_id: '858020471987247313'
-lifecycle_stage: active
+lifecycle_stage: deleted
 run_id: 71db44c8b56641af8dfc6efdd00e1a9d
 run_name: random-forest-v1
 run_uuid: 71db44c8b56641af8dfc6efdd00e1a9d

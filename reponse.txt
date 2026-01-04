@@ -1,0 +1,45 @@
+1. Pourquoi utiliser un .dockerignore ?
+
+Le fichier .dockerignore est utilisé pour exclure certains fichiers et répertoires du contexte de construction de l'image Docker. Il permet de réduire la taille de l'image en évitant de copier dans l'image des fichiers inutiles, comme des fichiers temporaires ou des dépendances locales. En excluant les éléments comme les fichiers __pycache__, les environnements virtuels (venv/, .venv), les fichiers de logs (*.log), ou encore les fichiers de configuration Git (.git, .gitignore), vous optimisez la taille de l'image et réduisez le risque d'inclure des informations sensibles.
+
+2. Quelle est la différence entre CMD et RUN dans un Dockerfile ?
+
+RUN : Cette commande est utilisée pendant la construction de l'image Docker. Elle exécute des commandes sur le système de fichiers du conteneur et modifie l'image. Par exemple, RUN pip install -r requirements.txt installe les dépendances pendant la création de l'image.
+
+CMD : Cette commande définit la commande par défaut à exécuter lorsque le conteneur est lancé. Elle est utilisée pour spécifier quel processus ou service doit démarrer lorsque le conteneur est lancé. Par exemple, dans le Dockerfile donné :
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+Cela signifie qu'à l'exécution du conteneur, uvicorn démarrera l'application FastAPI.
+
+En résumé : RUN est pour la configuration de l'image (pendant la création), tandis que CMD est pour définir l'application ou service à exécuter une fois le conteneur démarré.
+
+3. Pourquoi exposer le port 8000 ?
+
+Exposer un port dans un conteneur Docker permet de rendre ce port accessible de l'extérieur du conteneur. Dans le Dockerfile, la commande EXPOSE 8000 indique que l'application dans le conteneur écoute sur le port 8000. Lorsque le conteneur est lancé avec docker run -p 8000:8000, Docker fait correspondre le port 8000 du conteneur au port 8000 de votre machine locale, vous permettant ainsi d'accéder à l'API via http://localhost:8000.
+
+4. Comment vérifier que votre conteneur fonctionne correctement ?
+
+Il existe plusieurs manières de vérifier qu'un conteneur fonctionne correctement :
+
+Vérifier l'état du conteneur avec la commande :
+
+docker ps
+
+
+Cela affichera les conteneurs en cours d'exécution.
+
+Vérifier les logs du conteneur avec :
+
+docker logs <nom_du_conteneur>
+
+
+Cela vous permet de voir les logs de l'application dans le conteneur pour détecter d'éventuelles erreurs ou confirmer que le service fonctionne comme prévu.
+
+Tester l'API avec curl (comme montré dans votre exemple) pour vérifier si l'API répond correctement, par exemple :
+
+curl http://localhost:8000/health
+
+
+Cela permet de tester si l'API est en bonne santé.
