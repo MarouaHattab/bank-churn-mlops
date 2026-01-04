@@ -38,3 +38,9 @@ def test_docs_endpoint():
     """Test que la documentation Swagger est accessible"""
     response = client.get("/docs")
     assert response.status_code == 200
+
+def test_drift_check():
+    """Test l'endpoint de détection de drift"""
+    response = client.post("/drift/check?threshold=0.5")
+    assert response.status_code == 200
+    assert "features_drifted" in response.json()
