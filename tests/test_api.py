@@ -11,6 +11,9 @@ from app.main import app
 
 client = TestClient(app)
 
+# Clé API pour les tests (doit correspondre à la valeur par défaut dans main.py)
+HEADERS = {"X-API-Key": "mlops_secret_key_2026"}
+
 TEST_CUSTOMER = {
     "CreditScore": 650, "Age": 35, "Tenure": 5, "Balance": 50000.0,
     "NumOfProducts": 2, "HasCrCard": 1, "IsActiveMember": 1,
@@ -18,29 +21,39 @@ TEST_CUSTOMER = {
 }
 
 def test_read_root():
-    """Test l'endpoint racine /"""
+    """Test l'endpoint racine / (Pas besoin de clé API)"""
     response = client.get("/")
     assert response.status_code == 200
     assert response.json()["message"] == "Bank Churn Prediction API"
 
+def test_health_endpoint():
+    """Test l'endpoint /health avec clé API"""
+    response = client.get("/health", headers=HEADERS)
+    assert response.status_code in [200, 503] # 503 si le modèle n'est pas chargé dans l'env de test
+
 def test_predict_with_mock():
-    """Test /predict avec un mock du modèle pour éviter l'erreur 503"""
+    """Test /predict avec un mock du modèle et clé API"""
     with patch('app.main.model') as mock_model:
         # Simulation d'une prédiction réussie
         mock_model.predict_proba.return_value = np.array([[0.2, 0.8]])
         mock_model.predict.return_value = np.array([1])
         
-        response = client.post("/predict", json=TEST_CUSTOMER)
+        response = client.post("/predict", json=TEST_CUSTOMER, headers=HEADERS)
         # Le test passe si l'API traite la requête
         assert response.status_code in [200, 422, 503]
 
 def test_docs_endpoint():
-    """Test que la documentation Swagger est accessible"""
+    """Test que la documentation Swagger est accessible (Pas besoin de clé API)"""
     response = client.get("/docs")
     assert response.status_code == 200
 
 def test_drift_check():
-    """Test l'endpoint de détection de drift"""
-    response = client.post("/drift/check?threshold=0.5")
+    """Test l'endpoint de détection de drift avec clé API"""
+    response = client.post("/drift/check?threshold=0.5", headers=HEADERS)
     assert response.status_code == 200
     assert "features_drifted" in response.json()
+
+def test_unauthorized_access():
+    """Test qu'un accès sans clé API est refusé"""
+    response = client.post("/predict", json=TEST_CUSTOMER)
+    assert response.status_code == 403
