@@ -32,7 +32,7 @@ jobs:
           python drift_data_gen.py
       - name: Run tests with coverage
         env:
-          API_KEY: mlops_secret_key_2026
+          API_KEY: maroua-ht-2002
         run: |
           pytest -v --cov=app --cov-report=term
 
@@ -71,7 +71,7 @@ jobs:
               --name ${{ env.CONTAINER_APP_NAME }} \
               --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
               --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-              --set-env-vars API_KEY=mlops_secret_key_2026
+              --set-env-vars API_KEY=maroua-ht-2002
             echo "✅ Commande de déploiement envoyée à Azure."
       - name: Verify deployment
         run: |
