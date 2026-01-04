@@ -3,18 +3,14 @@ import axios from 'axios';
 import { 
   ShieldAlert, 
   UserCheck, 
-  TrendingDown, 
-  TrendingUp, 
   Activity, 
-  CreditCard, 
-  MapPin, 
-  DollarSign, 
-  Calendar,
   AlertCircle,
   CheckCircle2,
   Database,
   BarChart3,
-  RefreshCw
+  RefreshCw,
+  ChevronRight,
+  Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -36,8 +32,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-
-  // States for Drift Detection
   const [driftLoading, setDriftLoading] = useState(false);
   const [driftResult, setDriftResult] = useState(null);
 
@@ -70,7 +64,7 @@ function App() {
       const response = await axios.post(`${API_URL}/predict`, payload);
       setResult(response.data);
     } catch (err) {
-      setError("Erreur lors de la prédiction. Vérifiez la connexion à l'API.");
+      setError("Le service est temporairement indisponible. Vérifiez votre connexion.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -83,349 +77,216 @@ function App() {
       const response = await axios.post(`${API_URL}/drift/check?threshold=0.05`);
       setDriftResult(response.data);
     } catch (err) {
-      console.error("Drift check error:", err);
-      alert("Erreur lors de la vérification du drift.");
+      alert("Erreur technique lors de l'analyse.");
     } finally {
       setDriftLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-['Outfit']">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <header className="flex flex-col items-center mb-12 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 mb-4"
-          >
-            <div className="p-3 bg-indigo-600/20 rounded-2xl border border-indigo-500/30">
-              <Activity className="w-8 h-8 text-indigo-400" />
+    <div className="min-h-screen bg-[#0a0c10] text-[#e6edf3] p-6 lg:p-12 font-['Outfit'] antialiased">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Header - Simpler & More Professional */}
+        <header className="mb-16">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <Activity className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              ChurnInsight AI
-            </h1>
-          </motion.div>
-          <p className="text-slate-400 max-w-2xl">
-            Plateforme de surveillance prédictive des départs clients.
-            Utilisez notre intelligence artificielle de pointe pour anticiper et prévenir la perte de clientèle.
+            <h1 className="text-2xl font-bold tracking-tight text-white">ChurnInsight <span className="text-indigo-400">Pro</span></h1>
+          </div>
+          <p className="text-slate-400 text-sm max-w-lg">
+            Système expert d'analyse de rétention client propulsé par Machine Learning. 
+            Précision et monitoring en temps réel.
           </p>
         </header>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start mb-12">
-          {/* Left: Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl"
-          >
-            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-              <UserCheck className="w-5 h-5 text-indigo-400" />
-              Profil Client
-            </h2>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Score de Crédit</label>
-                  <input 
-                    name="CreditScore" type="number" value={formData.CreditScore} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Âge</label>
-                  <input 
-                    name="Age" type="number" value={formData.Age} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  />
-                </div>
+        <div className="grid lg:grid-cols-12 gap-12 items-start mb-20">
+          
+          {/* Left Side: Input Form (7 columns) */}
+          <div className="lg:col-span-7">
+            <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 shadow-sm">
+              <div className="flex items-center gap-2 mb-8">
+                <UserCheck className="w-4 h-4 text-indigo-400" />
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">Données Client</h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Géographie</label>
-                  <select 
-                    name="Geography" value={formData.Geography} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  >
-                    <option value="France">France</option>
-                    <option value="Germany">Allemagne</option>
-                    <option value="Spain">Espagne</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Ancienneté (mois)</label>
-                  <input 
-                    name="Tenure" type="number" value={formData.Tenure} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  />
-                </div>
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <InputField label="Score de Crédit" name="CreditScore" type="number" value={formData.CreditScore} onChange={handleChange} />
+                  <InputField label="Âge" name="Age" type="number" value={formData.Age} onChange={handleChange} />
+                  
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-medium text-slate-400">Géographie</label>
+                    <select name="Geography" value={formData.Geography} onChange={handleChange}
+                      className="bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-indigo-500 transition-colors">
+                      <option value="France">France</option>
+                      <option value="Germany">Allemagne</option>
+                      <option value="Spain">Espagne</option>
+                    </select>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Solde Compte</label>
-                  <input 
-                    name="Balance" type="number" value={formData.Balance} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Produits Active</label>
-                  <input 
-                    name="NumOfProducts" type="number" value={formData.NumOfProducts} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  />
-                </div>
-              </div>
+                  <InputField label="Ancienneté (mois)" name="Tenure" type="number" value={formData.Tenure} onChange={handleChange} />
+                  <InputField label="Solde ($)" name="Balance" type="number" value={formData.Balance} onChange={handleChange} />
+                  <InputField label="Produits" name="NumOfProducts" type="number" value={formData.NumOfProducts} onChange={handleChange} />
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Carte de Crédit</label>
-                  <select 
-                    name="HasCrCard" value={formData.HasCrCard} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  >
-                    <option value="1">Oui</option>
-                    <option value="0">Non</option>
-                  </select>
+                  <SelectField label="Carte de Crédit" name="HasCrCard" value={formData.HasCrCard} onChange={handleChange} />
+                  <SelectField label="Membre Actif" name="IsActiveMember" value={formData.IsActiveMember} onChange={handleChange} />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Membre Actif</label>
-                  <select 
-                    name="IsActiveMember" value={formData.IsActiveMember} onChange={handleChange}
-                    className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                  >
-                    <option value="1">Oui</option>
-                    <option value="0">Non</option>
-                  </select>
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400">Salaire Estimé ($)</label>
-                <input 
-                  name="EstimatedSalary" type="number" value={formData.EstimatedSalary} onChange={handleChange}
-                  className="w-full bg-slate-800 border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                />
-              </div>
+                <InputField label="Salaire Estimé ($)" name="EstimatedSalary" type="number" value={formData.EstimatedSalary} onChange={handleChange} />
 
-              <button 
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl font-bold shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <ShieldAlert className="w-5 h-5" />
-                    Analyser le Risque
-                  </>
-                )}
-              </button>
-            </form>
-          </motion.div>
+                <button 
+                  type="submit" disabled={loading}
+                  className="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/10">
+                  {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <>Analyser le Profil <ChevronRight className="w-4 h-4" /></>}
+                </button>
+              </form>
+            </div>
+          </div>
 
-          {/* Right: Results & Stats */}
-          <div className="space-y-8">
+          {/* Right Side: Results (5 columns) */}
+          <div className="lg:col-span-5 space-y-6">
             <AnimatePresence mode="wait">
               {!result && !error && !loading && (
-                <motion.div 
-                  key="empty"
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="h-full flex flex-col items-center justify-center p-12 border-2 border-dashed border-slate-800 rounded-3xl text-slate-500"
-                >
-                  <Activity className="w-16 h-16 mb-4 opacity-20" />
-                  <p className="text-center">Prêt à analyser le comportement client.</p>
-                </motion.div>
-              )}
-
-              {error && (
-                <motion.div 
-                  key="error"
-                  initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                  className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 flex items-start gap-4"
-                >
-                  <AlertCircle className="w-6 h-6 shrink-0" />
-                  <p>{error}</p>
-                </motion.div>
+                <div className="bg-[#161b22]/50 border-2 border-dashed border-[#30363d] rounded-2xl p-12 flex flex-col items-center justify-center text-slate-500 text-center">
+                  <Info className="w-8 h-8 mb-4 opacity-30" />
+                  <p className="text-sm font-medium">En attente de données...</p>
+                </div>
               )}
 
               {result && (
                 <motion.div 
-                  key="result"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className={`p-8 rounded-3xl border ${
-                    result.risk_level === 'Low' ? 'border-emerald-500/30 bg-emerald-500/5' :
-                    result.risk_level === 'Medium' ? 'border-amber-500/30 bg-amber-500/5' :
-                    'border-rose-500/30 bg-rose-500/5'
+                  initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
+                  className={`rounded-2xl border p-8 shadow-xl ${
+                    result.risk_level === 'Low' ? 'bg-[#0f1b15] border-emerald-500/20' :
+                    result.risk_level === 'Medium' ? 'bg-[#1b1a0f] border-amber-500/20' :
+                    'bg-[#1b0f0f] border-rose-500/20'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-8">
                     <div>
-                      <h3 className="text-slate-400 font-medium text-sm mb-1 uppercase tracking-wider">
-                        Analyse du Risque
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Diagnostic</span>
+                      <h3 className={`text-2xl font-bold ${
+                        result.risk_level === 'Low' ? 'text-emerald-400' :
+                        result.risk_level === 'Medium' ? 'text-amber-400' : 'text-rose-400'
+                      }`}>
+                        {result.risk_level === 'Low' ? 'Risque Faible' : 
+                         result.risk_level === 'Medium' ? 'Risque Modéré' : 'Risque Critique'}
                       </h3>
-                      <div className="text-3xl font-bold">
-                        {result.risk_level === 'Low' ? (
-                          <span className="text-emerald-400">Niveau Faible</span>
-                        ) : result.risk_level === 'Medium' ? (
-                          <span className="text-amber-400">Niveau Modéré</span>
-                        ) : (
-                          <span className="text-rose-400">Niveau Critique</span>
-                        )}
-                      </div>
                     </div>
-                    {result.risk_level === 'Low' ? (
-                      <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-                    ) : (
-                      <ShieldAlert className={`w-10 h-10 ${result.risk_level === 'Medium' ? 'text-amber-400' : 'text-rose-400'}`} />
-                    )}
                   </div>
 
                   <div className="space-y-6">
                     <div>
-                      <div className="flex justify-between mb-2 text-sm font-medium">
-                        <span>Probabilité de Désengagement</span>
-                        <span className={
-                          result.risk_level === 'Low' ? 'text-emerald-400' :
-                          result.risk_level === 'Medium' ? 'text-amber-400' : 'text-rose-400'
-                        }>
-                          {(result.churn_probability * 100).toFixed(1)}%
-                        </span>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span className="text-slate-400">Probabilité</span>
+                        <span className="font-mono font-bold">{(result.churn_probability * 100).toFixed(1)}%</span>
                       </div>
-                      <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-2 bg-slate-800 rounded-full">
                         <motion.div 
-                          initial={{ width: 0 }}
-                          animate={{ width: `${result.churn_probability * 100}%` }}
-                          transition={{ duration: 1, ease: 'easeOut' }}
+                          initial={{ width: 0 }} animate={{ width: `${result.churn_probability * 100}%` }}
                           className={`h-full rounded-full ${
-                            result.risk_level === 'Low' ? 'bg-emerald-400' :
-                            result.risk_level === 'Medium' ? 'bg-amber-400' : 'bg-rose-400'
+                            result.risk_level === 'Low' ? 'bg-emerald-500' :
+                            result.risk_level === 'Medium' ? 'bg-amber-500' : 'bg-rose-500'
                           }`}
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
-                        <div className="text-xs text-slate-500 uppercase font-bold mb-1">Prédiction</div>
-                        <div className="text-lg font-bold">
-                          {result.prediction === 1 ? 'Partant' : 'Fidèle'}
-                        </div>
+                    <div className="pt-6 border-t border-slate-800 flex flex-col gap-4">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Prédiction</span>
+                        <span className="font-semibold text-slate-200">{result.prediction === 1 ? 'Chute probable' : 'Fidélité attendue'}</span>
                       </div>
-                      <div className="p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
-                        <div className="text-xs text-slate-500 uppercase font-bold mb-1">Action Recommandée</div>
-                        <div className="text-lg font-bold">
-                          {result.risk_level === 'Low' ? 'Rétention standard' :
-                           result.risk_level === 'Medium' ? 'Offre personnalisée' : 'Contact Prioritaire'}
-                        </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Action</span>
+                        <span className="px-3 py-1 bg-slate-800 rounded-full text-slate-300 text-xs font-medium">
+                          {result.risk_level === 'Low' ? 'Observation' : 'Priorité Rétention'}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <StatCard icon={<TrendingDown className="w-4 h-4" />} title="Fidélisation" value="+12%" />
-              <StatCard icon={<TrendingUp className="w-4 h-4" />} title="Précision" value="94.2%" />
-              <StatCard icon={<MapPin className="w-4 h-4" />} title="Zone" value="Europe" />
-            </div>
           </div>
         </div>
 
-        {/* Data Drift Section (New) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl overflow-hidden relative"
-        >
-          <div className="absolute top-0 right-0 p-8 opacity-5">
-            <Database className="w-40 h-40" />
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 relative">
+        {/* Data Drift Section - Better Integration */}
+        <section className="border-t border-[#30363d] pt-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
             <div>
-              <h2 className="text-2xl font-bold flex items-center gap-3 mb-2">
-                <BarChart3 className="w-6 h-6 text-purple-400" />
-                Monitoring du Data Drift
-              </h2>
-              <p className="text-slate-400 text-sm">
-                Vérifiez si les données de production s'écartent statistiquement des données d'entraînement.
-              </p>
+              <div className="flex items-center gap-2 mb-2">
+                <Database className="w-5 h-5 text-indigo-400" />
+                <h2 className="text-xl font-bold text-white">Surveillance des Données</h2>
+              </div>
+              <p className="text-sm text-slate-400 max-w-md">Détectez tout changement statistique dans le comportement des clients avant que le modèle ne perde en précision.</p>
             </div>
             <button 
-              onClick={handleDriftCheck}
-              disabled={driftLoading}
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl font-bold transition-all disabled:opacity-50"
-            >
-              {driftLoading ? (
-                <RefreshCw className="w-5 h-5 animate-spin" />
-              ) : (
-                <Database className="w-5 h-5" />
-              )}
-              Lancer l'analyse statistique
+              onClick={handleDriftCheck} disabled={driftLoading}
+              className="bg-[#161b22] hover:bg-[#1d232c] border border-[#30363d] text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all flex items-center gap-3">
+              {driftLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
+              Lancer l'audit de Drift
             </button>
           </div>
 
           <AnimatePresence>
             {driftResult && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="grid md:grid-cols-3 gap-6 pt-6 border-t border-slate-800"
-              >
-                <div className="p-6 bg-slate-800/50 rounded-2xl">
-                  <div className="text-slate-400 text-xs font-bold uppercase mb-2">Features Analysées</div>
-                  <div className="text-4xl font-bold text-white">{driftResult.features_analyzed}</div>
-                </div>
-                <div className="p-6 bg-slate-800/50 rounded-2xl">
-                  <div className="text-slate-400 text-xs font-bold uppercase mb-2">Features avec Drift</div>
-                  <div className={`text-4xl font-bold ${driftResult.features_drifted > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                    {driftResult.features_drifted}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid md:grid-cols-2 gap-6">
+                <div className="bg-[#161b22] border border-[#30363d] p-6 rounded-2xl flex items-center gap-6">
+                  <div className="p-4 bg-indigo-500/10 rounded-xl text-indigo-400">
+                    <Database className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Qualité de Données</div>
+                    <div className="text-xl font-bold">{driftResult.features_drifted === 0 ? 'Excellente' : 'Altérée'}</div>
                   </div>
                 </div>
-                <div className="p-6 rounded-2xl flex items-center justify-center border border-slate-800">
-                  {driftResult.features_drifted === 0 ? (
-                    <div className="text-center">
-                      <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
-                      <span className="text-emerald-400 font-bold">Modèle Stable</span>
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <ShieldAlert className="w-10 h-10 text-amber-400 mx-auto mb-2" />
-                      <span className="text-amber-400 font-bold">Réentraînement Recommandé</span>
-                    </div>
-                  )}
+                <div className="bg-[#161b22] border border-[#30363d] p-6 rounded-2xl flex items-center gap-6">
+                  <div className={`p-4 rounded-xl ${driftResult.features_drifted === 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}`}>
+                    <BarChart3 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Score de Drift</div>
+                    <div className="text-xl font-bold">{driftResult.features_drifted} feature(s) déviée(s)</div>
+                  </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+        </section>
 
-        <footer className="mt-12 text-center text-slate-500 text-sm">
-          <p>&copy; 2026 ChurnInsight AI - Projet MLOps Avancé</p>
+        <footer className="mt-24 pb-12 text-center text-slate-600 text-xs">
+          <p>© 2026 ChurnInsight AI Engine — Terminal de Monitoring ML v2.0</p>
         </footer>
       </div>
     </div>
   );
 }
 
-function StatCard({ icon, title, value }) {
+// Sub-components for cleaner code
+function InputField({ label, ...props }) {
   return (
-    <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-2xl flex items-center gap-3">
-      <div className="p-2 bg-slate-800 rounded-lg text-indigo-400">
-        {icon}
-      </div>
-      <div>
-        <div className="text-[10px] text-slate-500 uppercase font-bold">{title}</div>
-        <div className="text-sm font-bold text-slate-200">{value}</div>
-      </div>
+    <div className="flex flex-col gap-2">
+      <label className="text-[13px] font-medium text-slate-400">{label}</label>
+      <input 
+        {...props}
+        className="bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2 text-sm outline-none focus:border-indigo-500 transition-colors"
+      />
+    </div>
+  );
+}
+
+function SelectField({ label, name, value, onChange }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-[13px] font-medium text-slate-400">{label}</label>
+      <select name={name} value={value} onChange={onChange}
+        className="bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-indigo-500 transition-colors">
+        <option value="1">Oui</option>
+        <option value="0">Non</option>
+      </select>
     </div>
   );
 }
