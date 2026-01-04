@@ -14,7 +14,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "https://bank-churn.blackbay-c234dcf2.italynorth.azurecontainerapps.io";
+const API_KEY = import.meta.env.VITE_API_KEY || "mlops_secret_key_2026";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -61,7 +62,9 @@ function App() {
     };
 
     try {
-      const response = await axios.post(`${API_URL}/predict`, payload);
+      const response = await axios.post(`${API_URL}/predict`, payload, {
+        headers: { "X-API-Key": API_KEY }
+      });
       setResult(response.data);
     } catch (err) {
       setError("Le service est temporairement indisponible. Vérifiez votre connexion.");
@@ -74,7 +77,9 @@ function App() {
   const handleDriftCheck = async () => {
     setDriftLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/drift/check?threshold=0.05`);
+      const response = await axios.post(`${API_URL}/drift/check?threshold=0.05`, {}, {
+        headers: { "X-API-Key": API_KEY }
+      });
       setDriftResult(response.data);
     } catch (err) {
       alert("Erreur technique lors de l'analyse.");

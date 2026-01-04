@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Security, Depends
+from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
+import os
 import joblib
 import numpy as np
 import logging
@@ -46,6 +48,21 @@ app.add_middleware(
 )
 
 # -------------------------------------------------
+# Sécurité - API Key
+# -------------------------------------------------
+API_KEY = os.getenv("API_KEY", "mlops_secret_key_2026")
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    raise HTTPException(
+        status_code=403,
+        detail="Clé API invalide ou manquante"
+    )
+
+# -------------------------------------------------
 # Chargement du modèle
 # -------------------------------------------------
 MODEL_PATH = os.getenv("MODEL_PATH", "model/churn_model.pkl")
@@ -75,7 +92,7 @@ def root():
     }
 
 @app.get("/health", response_model=HealthResponse)
-def health():
+def health(api_key: str = Depends(get_api_key)):
     if model is None:
         raise HTTPException(status_code=503, detail="Modèle non chargé")
     return {"status": "healthy", "model_loaded": True}
@@ -123,7 +140,7 @@ def predict_cached(features_hash: str, features_json: str):
 # Prédiction
 # -------------------------------------------------
 @app.post("/predict", response_model=PredictionResponse)
-def predict(features: CustomerFeatures):
+def predict(features: CustomerFeatures, api_key: str = Depends(get_api_key)):
     if model is None:
         raise HTTPException(status_code=503, detail="Modèle indisponible")
 
@@ -158,7 +175,7 @@ def predict(features: CustomerFeatures):
 # Drift Detection (API)
 # -------------------------------------------------
 @app.post("/drift/check", tags=["Monitoring"])
-def check_drift(threshold: float = 0.05):
+def check_drift(threshold: float = 0.05, api_key: str = Depends(get_api_key)):
     try:
         results = detect_drift(
             reference_file="data/bank_churn.csv",
