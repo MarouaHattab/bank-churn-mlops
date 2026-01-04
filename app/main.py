@@ -92,7 +92,7 @@ def root():
     }
 
 @app.get("/health", response_model=HealthResponse)
-def health(api_key: str = Depends(get_api_key)):
+def health():
     if model is None:
         raise HTTPException(status_code=503, detail="Modèle non chargé")
     return {"status": "healthy", "model_loaded": True}

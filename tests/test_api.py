@@ -27,9 +27,9 @@ def test_read_root():
     assert response.json()["message"] == "Bank Churn Prediction API"
 
 def test_health_endpoint():
-    """Test l'endpoint /health avec clé API"""
-    response = client.get("/health", headers=HEADERS)
-    assert response.status_code in [200, 503] # 503 si le modèle n'est pas chargé dans l'env de test
+    """Test l'endpoint /health (Désormais public pour Azure)"""
+    response = client.get("/health")
+    assert response.status_code in [200, 503]
 
 def test_predict_with_mock():
     """Test /predict avec un mock du modèle et clé API"""
