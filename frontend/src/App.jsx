@@ -14,8 +14,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = import.meta.env.VITE_API_URL || "https://bank-churn.blackbay-c234dcf2.italynorth.azurecontainerapps.io";
-const API_KEY = import.meta.env.VITE_API_KEY || "mlops_secret_key_2026";
+const API_URL = import.meta.env.VITE_API_URL;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 function App() {
   const [formData, setFormData] = useState({
@@ -211,6 +211,22 @@ function App() {
                         </span>
                       </div>
                     </div>
+
+                    {/* Explicabilité SHAP-Lite */}
+                    {result.top_factors && result.top_factors.length > 0 && (
+                      <div className="mt-8 pt-6 border-t border-slate-800">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 block">
+                          Facteurs déterminants
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {result.top_factors.map((factor, idx) => (
+                            <span key={idx} className="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1 rounded-lg text-xs font-medium">
+                              {factor}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
