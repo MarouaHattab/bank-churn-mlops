@@ -50,7 +50,7 @@ app.add_middleware(
 # -------------------------------------------------
 # Sécurité - API Key
 # -------------------------------------------------
-API_KEY = os.getenv("API_KEY", "mlops_secret_key_2026")
+API_KEY = os.getenv("API_KEY")
 API_KEY_NAME = "X-API-Key"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 

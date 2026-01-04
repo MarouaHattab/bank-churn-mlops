@@ -31,6 +31,8 @@ jobs:
         run: |
           python drift_data_gen.py
       - name: Run tests with coverage
+        env:
+          API_KEY: mlops_secret_key_2026
         run: |
           pytest -v --cov=app --cov-report=term
 
@@ -68,7 +70,8 @@ jobs:
             az containerapp update \
               --name ${{ env.CONTAINER_APP_NAME }} \
               --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-              --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+              --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+              --set-env-vars API_KEY=mlops_secret_key_2026
             echo "✅ Commande de déploiement envoyée à Azure."
       - name: Verify deployment
         run: |
