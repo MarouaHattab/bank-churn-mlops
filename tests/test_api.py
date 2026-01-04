@@ -11,8 +11,9 @@ from app.main import app
 
 client = TestClient(app)
 
-# Clé API pour les tests (doit correspondre à la valeur par défaut dans main.py)
-HEADERS = {"X-API-Key": "mlops_secret_key_2026"}
+# Clé API pour les tests (récupérée de l'environnement GitHub Secrets)
+API_KEY = os.getenv("API_KEY")
+HEADERS = {"X-API-Key": API_KEY}
 
 TEST_CUSTOMER = {
     "CreditScore": 650, "Age": 35, "Tenure": 5, "Balance": 50000.0,
