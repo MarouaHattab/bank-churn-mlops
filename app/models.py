@@ -35,7 +35,6 @@ class PredictionResponse(BaseModel):
     churn_probability: float = Field(..., description="Probabilite de churn (0-1)")
     prediction: int = Field(..., description="Prediction binaire (0=reste, 1=part)")
     risk_level: str = Field(..., description="Niveau de risque (Low/Medium/High)")
-    top_factors: List[str] = Field(default=[], description="Les 3 principaux facteurs influençant la prédiction")
 
 class HealthResponse(BaseModel):
     """Schema pour le health check"""

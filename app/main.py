@@ -106,31 +106,6 @@ def hash_features(features_dict: dict) -> str:
         json.dumps(features_dict, sort_keys=True).encode()
     ).hexdigest()
 
-def get_top_factors(features_dict: dict):
-    """Calcule les facteurs influençant le plus la prédiction (SHAP Lite)"""
-    # Importances globales par défaut (pour un modèle de Churn bancaire classique)
-    cols = ["CreditScore", "Age", "Tenure", "Balance", "NumOfProducts", "HasCrCard", "IsActiveMember", "EstimatedSalary", "Germany", "Spain"]
-    
-    # On pondère par les valeurs de l'utilisateur pour simuler une importance locale
-    # Ex: Age élevé = Impact fort sur le churn
-    # Ex: IsActiveMember=0 = Impact fort sur le churn
-    weights = {
-        "Age": features_dict["Age"] / 50.0,
-        "Balance": features_dict["Balance"] / 100000.0,
-        "IsActiveMember": 1.5 if features_dict["IsActiveMember"] == 0 else 0.1,
-        "NumOfProducts": 1.2 if features_dict["NumOfProducts"] == 1 else 0.5,
-        "CreditScore": (850 - features_dict["CreditScore"]) / 300.0,
-        "Germany": 1.0 if features_dict["Geography_Germany"] == 1 else 0.0,
-        "Tenure": (10 - features_dict["Tenure"]) / 5.0,
-        "EstimatedSalary": features_dict["EstimatedSalary"] / 150000.0,
-        "HasCrCard": 0.2 if features_dict["HasCrCard"] == 0 else 0.1,
-        "Spain": 0.2 if features_dict["Geography_Spain"] == 1 else 0.0
-    }
-    
-    # Trier par poids
-    sorted_factors = sorted(weights.items(), key=lambda x: x[1], reverse=True)
-    return [f[0] for f in sorted_factors[:3]]
-
 @lru_cache(maxsize=1000)
 def predict_cached(features_hash: str, features_json: str):
     """Fonction de prediction mise en cache"""
@@ -155,14 +130,10 @@ def predict_cached(features_hash: str, features_json: str):
     prediction = int(proba > 0.5)
     risk = "Low" if proba < 0.3 else "Medium" if proba < 0.7 else "High"
     
-    # Recuperer les facteurs (Explicabilité)
-    top_factors = get_top_factors(features_dict)
-    
     return {
         "churn_probability": round(float(proba), 4),
         "prediction": prediction,
-        "risk_level": risk,
-        "top_factors": top_factors
+        "risk_level": risk
     }
 
 # -------------------------------------------------

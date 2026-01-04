@@ -211,22 +211,6 @@ function App() {
                         </span>
                       </div>
                     </div>
-
-                    {/* Explicabilité SHAP-Lite */}
-                    {result.top_factors && result.top_factors.length > 0 && (
-                      <div className="mt-8 pt-6 border-t border-slate-800">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 block">
-                          Facteurs déterminants
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {result.top_factors.map((factor, idx) => (
-                            <span key={idx} className="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1 rounded-lg text-xs font-medium">
-                              {factor}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </motion.div>
               )}
@@ -279,7 +263,7 @@ function App() {
         </section>
 
         <footer className="mt-24 pb-12 text-center text-slate-600 text-xs">
-          <p>© 2026 ChurnInsight AI Engine — Terminal de Monitoring ML v2.0</p>
+          <p>© 2026 Bank-churn-mlops</p>
         </footer>
       </div>
     </div>
