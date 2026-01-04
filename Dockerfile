@@ -14,7 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
 COPY model/ ./model/
 COPY data/ ./data/
-COPY static/ ./static/
 COPY drift_data_gen.py .
 
 # Générer les données de production pour que le drift check fonctionne
