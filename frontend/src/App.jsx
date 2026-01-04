@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = "https://bank-churn.blackbay-c234dcf2.italynorth.azurecontainerapps.io";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [formData, setFormData] = useState({
