@@ -27,6 +27,9 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Generate production data
+        run: |
+          python drift_data_gen.py
       - name: Run tests with coverage
         run: |
           pytest -v --cov=app --cov-report=term
