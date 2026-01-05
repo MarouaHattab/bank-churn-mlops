@@ -17,3 +17,4 @@ resultat.txt
 azure-credentials.json
 montoring.txt
 reponse.txt
+.streamlit/secrets.toml

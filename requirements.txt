@@ -28,3 +28,8 @@ opencensus-ext-azure==1.1.9
 opencensus-ext-requests>=0.7.6
 matplotlib==3.8.2
 seaborn==0.13.0
+
+# Frontend (Streamlit)
+streamlit==1.31.1
+pyarrow==14.0.1
+python-dotenv==1.0.0
