@@ -18,3 +18,5 @@ azure-credentials.json
 montoring.txt
 reponse.txt
 .streamlit/secrets.toml
+QUICK_DEPLOY.md
+STREAMLIT_DEPLOYMENT.md

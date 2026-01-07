@@ -487,6 +487,6 @@ with tab3:
 st.divider()
 st.markdown("""
     <div style="text-align: center; color: #888; font-size: 0.9rem; margin-top: 2rem;">
-    Bank Churn Prediction System | Powered by Streamlit | Backend: Azure Container Apps
+    Bank Churn Prediction System
     </div>
     """, unsafe_allow_html=True)
